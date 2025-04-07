@@ -1,0 +1,4 @@
+Banana,13.00,10
+Bolo,21.00,50
+Achocolatado,10.30,30
+Pao,5.00,8
