@@ -24,6 +24,8 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+      - name: Build Project
+          run: mvn clean install -DskipTests
       - name: Cache Maven packages
         uses: actions/cache@v4
         with:
