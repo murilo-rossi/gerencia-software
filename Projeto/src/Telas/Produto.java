@@ -1,6 +1,10 @@
 package Telas;
 
-public class Produto {
+import java.io.Serializable;
+
+public class Produto implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private int quantia;
     private String nome;
     private float imposto;
@@ -18,12 +22,15 @@ public class Produto {
     public String getNome() {
         return nome;
     }
+
     public int getQuantidade() {
         return quantia;
     }
+
     public void setQuantidade(int quantidade) {
         this.quantia = quantidade;
     }
+
     public double getPreco() {
         return preco;
     }
