@@ -19,6 +19,10 @@ public class TelaGerente extends JFrame {
     private DefaultTableModel tabelaModel;
     private JTable tabelaEstoque;
 
+    // Define as constantes para os literais duplicados
+    private static final String CADASTRAR_PRODUTO_TEXT = "Cadastrar Produto";
+    private static final String EXCLUIR_PRODUTO_TEXT = "Excluir Produto";
+
     /**
      * Construtor da classe TelaGerente
      * @param Estoque O inventário da cafeteria
@@ -67,12 +71,12 @@ public class TelaGerente extends JFrame {
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
 
         // Configuração dos botões no painel
-        JButton cadastrarButton = new JButton("Cadastrar Produto");
+        JButton cadastrarButton = new JButton(CADASTRAR_PRODUTO_TEXT); // Usando a constante
         cadastrarButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
         cadastrarButton.addActionListener(e -> abrirDialogoCadastro());
         bottomPanel.add(cadastrarButton);
 
-        JButton excluirButton = new JButton("Excluir Produto");
+        JButton excluirButton = new JButton(EXCLUIR_PRODUTO_TEXT); // Usando a constante
         excluirButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
         excluirButton.addActionListener(e -> abrirDialogoExclusao());
         bottomPanel.add(excluirButton);
@@ -85,7 +89,6 @@ public class TelaGerente extends JFrame {
         add(panel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
 
-
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screenSize.width - getWidth()) / 2;
         int y = (screenSize.height - getHeight()) / 2;
@@ -97,7 +100,7 @@ public class TelaGerente extends JFrame {
      * Abre o diálogo de cadastro de produtos.
      */
     private void abrirDialogoCadastro() {
-        JDialog dialogoCadastro = new JDialog(this, "Cadastrar Produto", true);
+        JDialog dialogoCadastro = new JDialog(this, CADASTRAR_PRODUTO_TEXT, true); // Usando a constante
         dialogoCadastro.setSize(300, 300);
         dialogoCadastro.setLayout(new BorderLayout());
 
@@ -117,7 +120,7 @@ public class TelaGerente extends JFrame {
         quantidadeLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
         JTextField quantidadeField = new JTextField();
 
-        JButton cadastrarButton = new JButton("Cadastrar Produto");
+        JButton cadastrarButton = new JButton(CADASTRAR_PRODUTO_TEXT); // Usando a constante
         cadastrarButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
 
         // Escuta de ações no botão de cadastrar
@@ -182,7 +185,7 @@ public class TelaGerente extends JFrame {
      * Abre o diálogo de exclusão de produtos.
      */
     private void abrirDialogoExclusao() {
-        JDialog dialogoExclusao = new JDialog(this, "Excluir Produto", true);
+        JDialog dialogoExclusao = new JDialog(this, EXCLUIR_PRODUTO_TEXT, true); // Usando a constante
         dialogoExclusao.setSize(300, 150);
         dialogoExclusao.setLayout(new BorderLayout());
 
@@ -196,7 +199,7 @@ public class TelaGerente extends JFrame {
             produtoComboBox.addItem(produto.getNome());
         }
 
-        JButton excluirButton = new JButton("Excluir Produto");
+        JButton excluirButton = new JButton(EXCLUIR_PRODUTO_TEXT); // Usando a constante
         excluirButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
 
         excluirButton.addActionListener(new ActionListener() {
@@ -256,7 +259,6 @@ public class TelaGerente extends JFrame {
         JLabel precoLabel = new JLabel("Preço do Produto:");
         precoLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
         JTextField precoField = new JTextField(String.valueOf(produto.getPreco()));
-
 
         JLabel quantidadeLabel = new JLabel("Quantidade:");
         quantidadeLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
