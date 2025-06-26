@@ -3,6 +3,7 @@ package Telas;
 import Paths.Caminhos;
 
 import javax.swing.*;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -34,7 +35,7 @@ public class TelaGerente extends JFrame {
         // Configuração da tela inicial
         setTitle("Administrador");
         setSize(700, 700);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Configuração da tabela de estoque

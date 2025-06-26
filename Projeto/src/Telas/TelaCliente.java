@@ -3,6 +3,7 @@ package Telas;
 import Paths.Caminhos;
 
 import javax.swing.*;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -11,17 +12,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TelaCliente extends JFrame {
-    private static Ordem ordemAtual;
-    private static JTable tabelaPedido;
-    private static DefaultTableModel tabelaModel;
-    private static JLabel totalLabel;
+    private Ordem ordemAtual;
+    private JTable tabelaPedido;
+    private DefaultTableModel tabelaModel;
+    private JLabel totalLabel;
 
     public TelaCliente(Estoque Estoque) {
         ordemAtual = new Ordem();
 
         setTitle("Comprador");
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         JButton finalizarButton = new JButton("Finalizar Pedido");
@@ -44,7 +45,6 @@ public class TelaCliente extends JFrame {
                     ex.printStackTrace();
                 }
                 ordemAtual.finalizarPedido();
-                ordemAtual = new Ordem();
                 atualizarAreaPedido();
             } else {
                 JOptionPane.showMessageDialog(TelaCliente.this, "Nenhum produto foi selecionado! Adicione um produto ou aperte em 'Sair'", "Houve um Erro", JOptionPane.WARNING_MESSAGE);

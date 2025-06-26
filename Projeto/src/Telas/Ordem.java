@@ -63,6 +63,7 @@ public class Ordem implements Serializable {
     // Finaliza o pedido (exibe o total no console)
     public void finalizarPedido() {
         System.out.println("Pedido finalizado. Total: R$ " + calTotal());
+        this.itens.clear();
     }
 
     // Salva os detalhes do pedido em um arquivo
