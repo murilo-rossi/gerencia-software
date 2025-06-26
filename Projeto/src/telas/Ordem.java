@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 import javax.swing.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -64,7 +65,7 @@ public class Ordem implements Serializable {
 
     // Finaliza o pedido (exibe o total no console)
     public void finalizarPedido() {
-        LOGGER.info("Pedido finalizado. Total: R$ " + calTotal());
+        LOGGER.log(Level.INFO, "Pedido finalizado. Total: R$ {0}", calTotal());
         this.itens.clear();
     }
 
@@ -90,7 +91,7 @@ public class Ordem implements Serializable {
                 String nome = entry.getKey();
                 Integer quantidade = entry.getValue(); // Obtém a quantidade diretamente
 
-                writer.write(String.format("\nProduto: %s\nPreço Unitário: %.2f\nUnidades: %d",
+                writer.write(String.format("%nProduto: %s%nPreço Unitário: %.2f%nUnidades: %d",
                          nome, precoMap.get(nome), quantidade));
                 writer.newLine();
             }
