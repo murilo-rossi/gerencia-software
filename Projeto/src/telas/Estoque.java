@@ -1,4 +1,4 @@
-package Telas;
+package telas;
 
 import java.io.*;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public class Estoque implements Serializable {
 
     // Carrega o inventário de um arquivo e retorna uma instância de Estoque
     public static Estoque carregarInventario(String caminhoArquivo) throws IOException {
-        Estoque Estoque = new Estoque();
+        Estoque estoque = new Estoque();
         try (BufferedReader reader = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
@@ -38,10 +38,10 @@ public class Estoque implements Serializable {
                 String nome = partes[0];
                 double preco = Double.parseDouble(partes[1]);
                 int quantidade = Integer.parseInt(partes[2]);
-                Estoque.addProduto(new Produto(nome, preco, quantidade));
+                estoque.addProduto(new Produto(nome, preco, quantidade));
             }
         }
-        return Estoque;
+        return estoque;
     }
 
     // Salva o inventário em um arquivo

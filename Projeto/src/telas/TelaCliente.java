@@ -1,27 +1,29 @@
-package Telas;
-
-import Paths.Caminhos;
+package telas;
 
 import javax.swing.*;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import paths.Caminhos;
+
 import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TelaCliente extends JFrame {
-    private static Ordem ordemAtual;
-    private static JTable tabelaPedido;
-    private static DefaultTableModel tabelaModel;
-    private static JLabel totalLabel;
+    private Ordem ordemAtual;
+    private JTable tabelaPedido;
+    private DefaultTableModel tabelaModel;
+    private JLabel totalLabel;
 
-    public TelaCliente(Estoque Estoque) {
+    public TelaCliente(Estoque estoque) {
         ordemAtual = new Ordem();
 
         setTitle("Comprador");
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         JButton finalizarButton = new JButton("Finalizar Pedido");
@@ -39,12 +41,11 @@ public class TelaCliente extends JFrame {
                 JOptionPane.showMessageDialog(TelaCliente.this, "Pedido realizado com sucesso! Total: R$ " + String.format("%.2f", total));
                 try {
                     ordemAtual.salvarPedido(Caminhos.PEDIDOS_FILE);
-                    Estoque.salvarInv(Caminhos.INVENTARIO_FILE);
+                    estoque.salvarInv(Caminhos.INVENTARIO_FILE);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
                 ordemAtual.finalizarPedido();
-                ordemAtual = new Ordem();
                 atualizarAreaPedido();
             } else {
                 JOptionPane.showMessageDialog(TelaCliente.this, "Nenhum produto foi selecionado! Adicione um produto ou aperte em 'Sair'", "Houve um Erro", JOptionPane.WARNING_MESSAGE);
@@ -58,7 +59,7 @@ public class TelaCliente extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5); // Definindo um pequeno espaço de 5px ao redor dos componentes
 
         int row = 0;
-        for (Produto produto : Estoque.getProdutos().values()) {
+        for (Produto produto : estoque.getProdutos().values()) {
             gbc.gridx = 0;
             gbc.gridy = row;
             gbc.weightx = 1.0; // Faz com que o label ocupe o espaço disponível
