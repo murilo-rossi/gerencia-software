@@ -1,21 +1,23 @@
-package Main;
+package main;
 
-import Telas.Estoque;
-import Paths.Caminhos;
-import Telas.TelaCliente;
+import telas.Estoque;
+import telas.TelaCliente;
 
 import javax.swing.*;
+
+import paths.Caminhos;
+
 import java.io.IOException;
 
 public class ClienteMain{
-    private Estoque Estoque;
+    private Estoque estoque;
 
     public ClienteMain() {
         // Carrega o inventário
         try {
-            Estoque = Estoque.carregarInventario(Caminhos.INVENTARIO_FILE);
+            estoque = Estoque.carregarInventario(Caminhos.INVENTARIO_FILE);
         } catch (IOException e) {
-            Estoque = new Estoque();
+            estoque = new Estoque();
         }
 
         // Define o look and feel Nimbus
@@ -29,7 +31,7 @@ public class ClienteMain{
     }
 
     private void abrirTelaCliente() {
-        SwingUtilities.invokeLater(() -> new TelaCliente(Estoque));
+        SwingUtilities.invokeLater(() -> new TelaCliente(estoque));
     }
 
     public static void main(String[] args) {

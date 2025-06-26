@@ -1,10 +1,11 @@
-package Telas;
-
-import Paths.Caminhos;
+package telas;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import paths.Caminhos;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +16,7 @@ import java.io.IOException;
 /** Classe que representa a interface do gerente */
 public class TelaGerente extends JFrame {
     private static TelaGerente instance;
-    private Estoque Estoque;
+    private Estoque estoque;
     private DefaultTableModel tabelaModel;
     private JTable tabelaEstoque;
 
@@ -25,16 +26,15 @@ public class TelaGerente extends JFrame {
 
     /**
      * Construtor da classe TelaGerente
-     * @param Estoque O inventário da cafeteria
+     * @param estoque O inventário da cafeteria
      */
-    public TelaGerente(Estoque Estoque) {
-        this.Estoque = Estoque;
-        instance = this;
+    private TelaGerente(Estoque estoque) {
+        this.estoque = estoque;
 
         // Configuração da tela inicial
         setTitle("Administrador");
         setSize(700, 700);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Configuração da tabela de estoque
@@ -55,7 +55,7 @@ public class TelaGerente extends JFrame {
                 int column = tabelaEstoque.columnAtPoint(e.getPoint());
                 if (column == 3) { // Coluna "Atualizar"
                     String nomeProduto = (String) tabelaModel.getValueAt(row, 0);
-                    Produto produto = Estoque.pesquisarProduto(nomeProduto);
+                    Produto produto = estoque.pesquisarProduto(nomeProduto);
                     if (produto != null) {
                         abrirDialogoAtualizacao(produto);
                     }
@@ -124,36 +124,33 @@ public class TelaGerente extends JFrame {
         cadastrarButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
 
         // Escuta de ações no botão de cadastrar
-        cadastrarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String nome = nomeField.getText();
-                double preco;
-                int quantidade;
+        cadastrarButton.addActionListener(e -> { // A conversão acontece aqui!
+            String nome = nomeField.getText();
+            double preco;
+            int quantidade;
 
-                // Tentativa de converter texto para números
-                try {
-                    preco = Double.parseDouble(precoField.getText());
-                    quantidade = Integer.parseInt(quantidadeField.getText());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(dialogoCadastro, "Valor inválido. use um ponto (.) para números decimais.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                // Cria um novo objeto Produto com os dados fornecidos
-                Produto produto = new Produto(nome, preco, quantidade);
-                Estoque.addProduto(produto); // Adiciona o produto à Estoque
-                JOptionPane.showMessageDialog(dialogoCadastro, "Produto cadastrado com sucesso!");
-
-                try {
-                    Estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-                atualizarTabelaEstoque(); // Atualiza a tabela de estoque na tela de gerente
-                dialogoCadastro.dispose(); // Fecha o diálogo de cadastro
+            // Tentativa de converter texto para números
+            try {
+                preco = Double.parseDouble(precoField.getText());
+                quantidade = Integer.parseInt(quantidadeField.getText());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialogoCadastro, "Valor inválido. use um ponto (.) para números decimais.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            // Cria um novo objeto Produto com os dados fornecidos
+            Produto produto = new Produto(nome, preco, quantidade);
+            estoque.addProduto(produto); // Adiciona o produto à Estoque
+            JOptionPane.showMessageDialog(dialogoCadastro, "Produto cadastrado com sucesso!");
+
+            try {
+                estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            atualizarTabelaEstoque(); // Atualiza a tabela de estoque na tela de gerente
+            dialogoCadastro.dispose(); // Fecha o diálogo de cadastro
         });
 
         // Adiciona os elementos no painel com espaçamento
@@ -195,31 +192,28 @@ public class TelaGerente extends JFrame {
         JLabel selectLabel = new JLabel("Selecione o Produto:");
         selectLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
         JComboBox<String> produtoComboBox = new JComboBox<>();
-        for (Produto produto : Estoque.getProdutos().values()) {
+        for (Produto produto : estoque.getProdutos().values()) {
             produtoComboBox.addItem(produto.getNome());
         }
 
         JButton excluirButton = new JButton(EXCLUIR_PRODUTO_TEXT); // Usando a constante
         excluirButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
 
-        excluirButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String nomeProduto = (String) produtoComboBox.getSelectedItem();
-                int confirm = JOptionPane.showConfirmDialog(dialogoExclusao, "Tem certeza que deseja excluir o produto " + nomeProduto + "?", "Confirmação de Exclusão", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    Estoque.deletarProduto(nomeProduto);
-                    JOptionPane.showMessageDialog(dialogoExclusao, "Produto excluído com sucesso!");
+        excluirButton.addActionListener(e -> {
+            String nomeProduto = (String) produtoComboBox.getSelectedItem();
+            int confirm = JOptionPane.showConfirmDialog(dialogoExclusao, "Tem certeza que deseja excluir o produto " + nomeProduto + "?", "Confirmação de Exclusão", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                estoque.deletarProduto(nomeProduto);
+                JOptionPane.showMessageDialog(dialogoExclusao, "Produto excluído com sucesso!");
 
-                    try {
-                        Estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-
-                    atualizarTabelaEstoque(); // Atualiza a tabela de estoque na tela de gerente
-                    dialogoExclusao.dispose(); // Fecha o diálogo de exclusão
+                try {
+                    estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
+
+                atualizarTabelaEstoque(); // Atualiza a tabela de estoque na tela de gerente
+                dialogoExclusao.dispose(); // Fecha o diálogo de exclusão
             }
         });
 
@@ -268,35 +262,32 @@ public class TelaGerente extends JFrame {
         atualizarButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
 
         // Escuta de ações no botão de atualizar
-        atualizarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                double preco;
-                int quantidade;
+        atualizarButton.addActionListener(e -> {
+            double preco;
+            int quantidade;
 
-                // Tentativa de converter texto para números
-                try {
-                    preco = Double.parseDouble(precoField.getText());
-                    quantidade = Integer.parseInt(quantidadeField.getText());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(dialogoAtualizacao, "Valor inválido. use um ponto (.) para números decimais.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                // Atualiza o objeto Produto com os novos dados
-                Produto produtoAtualizado = new Produto(produto.getNome(), preco, quantidade);
-                Estoque.addProduto(produtoAtualizado); // Atualiza o produto na Estoque
-                JOptionPane.showMessageDialog(dialogoAtualizacao, "Produto atualizado com sucesso!");
-
-                try {
-                    Estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-                atualizarTabelaEstoque(); // Atualiza a tabela de estoque na tela de gerente
-                dialogoAtualizacao.dispose(); // Fecha o diálogo de atualização
+            // Tentativa de converter texto para números
+            try {
+                preco = Double.parseDouble(precoField.getText());
+                quantidade = Integer.parseInt(quantidadeField.getText());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialogoAtualizacao, "Valor inválido. use um ponto (.) para números decimais.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            // Atualiza o objeto Produto com os novos dados
+            Produto produtoAtualizado = new Produto(produto.getNome(), preco, quantidade);
+            estoque.addProduto(produtoAtualizado); // Atualiza o produto na Estoque
+            JOptionPane.showMessageDialog(dialogoAtualizacao, "Produto atualizado com sucesso!");
+
+            try {
+                estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            atualizarTabelaEstoque(); // Atualiza a tabela de estoque na tela de gerente
+            dialogoAtualizacao.dispose(); // Fecha o diálogo de atualização
         });
 
         // Adiciona os elementos no painel com espaçamento
@@ -329,7 +320,7 @@ public class TelaGerente extends JFrame {
      */
     public void atualizarTabelaEstoque() {
         tabelaModel.setRowCount(0); // Limpa a tabela
-        for (Produto produto : Estoque.getProdutos().values()) {
+        for (Produto produto : estoque.getProdutos().values()) {
             tabelaModel.addRow(new Object[]{produto.getNome(), String.format("%.2f", produto.getPreco()), produto.getQuantidade(), "Atualizar"});
         }
     }
@@ -371,7 +362,10 @@ public class TelaGerente extends JFrame {
      * Retorna a instância atual da tela do gerente.
      * @return A instância da tela do gerente.
      */
-    public static TelaGerente getInstance() {
+    public static TelaGerente getInstance(Estoque estoque) { // Passo 3: Modificar o método
+        if (instance == null) {
+            instance = new TelaGerente(estoque);
+        }
         return instance;
     }
 }

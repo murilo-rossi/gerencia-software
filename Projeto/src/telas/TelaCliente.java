@@ -1,27 +1,28 @@
-package Telas;
-
-import Paths.Caminhos;
+package telas;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import paths.Caminhos;
+
 import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TelaCliente extends JFrame {
-    private static Ordem ordemAtual;
-    private static JTable tabelaPedido;
-    private static DefaultTableModel tabelaModel;
-    private static JLabel totalLabel;
+    private Ordem ordemAtual;
+    private JTable tabelaPedido;
+    private DefaultTableModel tabelaModel;
+    private JLabel totalLabel;
 
-    public TelaCliente(Estoque Estoque) {
+    public TelaCliente(Estoque estoque) {
         ordemAtual = new Ordem();
 
         setTitle("Comprador");
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         JButton finalizarButton = new JButton("Finalizar Pedido");
@@ -39,12 +40,11 @@ public class TelaCliente extends JFrame {
                 JOptionPane.showMessageDialog(TelaCliente.this, "Pedido realizado com sucesso! Total: R$ " + String.format("%.2f", total));
                 try {
                     ordemAtual.salvarPedido(Caminhos.PEDIDOS_FILE);
-                    Estoque.salvarInv(Caminhos.INVENTARIO_FILE);
+                    estoque.salvarInv(Caminhos.INVENTARIO_FILE);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
                 ordemAtual.finalizarPedido();
-                ordemAtual = new Ordem();
                 atualizarAreaPedido();
             } else {
                 JOptionPane.showMessageDialog(TelaCliente.this, "Nenhum produto foi selecionado! Adicione um produto ou aperte em 'Sair'", "Houve um Erro", JOptionPane.WARNING_MESSAGE);
@@ -58,7 +58,7 @@ public class TelaCliente extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5); // Definindo um pequeno espaço de 5px ao redor dos componentes
 
         int row = 0;
-        for (Produto produto : Estoque.getProdutos().values()) {
+        for (Produto produto : estoque.getProdutos().values()) {
             gbc.gridx = 0;
             gbc.gridy = row;
             gbc.weightx = 1.0; // Faz com que o label ocupe o espaço disponível
@@ -85,7 +85,7 @@ public class TelaCliente extends JFrame {
                 int quantidade = 1; // Quantidade padrão ao adicionar um produto
                 ordemAtual.addItem(produto, quantidade);
                 atualizarAreaPedido();
-                TelaGerente telaGerente = TelaGerente.getInstance();
+                TelaGerente telaGerente = TelaGerente.getInstance(estoque);
                 if (telaGerente != null) {
                     telaGerente.atualizarTabelaEstoque();
                 }
@@ -95,7 +95,7 @@ public class TelaCliente extends JFrame {
                 int quantidade = 1; // Quantidade padrão ao remover um produto
                 ordemAtual.removerItem(produto.getNome(), quantidade);
                 atualizarAreaPedido();
-                TelaGerente telaGerente = TelaGerente.getInstance();
+                TelaGerente telaGerente = TelaGerente.getInstance(estoque);
                 if (telaGerente != null) {
                     telaGerente.atualizarTabelaEstoque();
                 }
@@ -136,9 +136,14 @@ public class TelaCliente extends JFrame {
             valorMap.put(p.getNome(), valorMap.getOrDefault(p.getNome(), 0.0) + p.getPreco());
         }
 
-        for (String nome : quantidadeMap.keySet()) {
+        for (Map.Entry<String, Integer> entry : quantidadeMap.entrySet()) {
+            String nome = entry.getKey();
+            Integer quantidade = entry.getValue(); // Valor obtido diretamente, sem nova busca
+
             tabelaModel.addRow(new Object[]{
-                    nome, quantidadeMap.get(nome), String.format("R$ %.2f", valorMap.get(nome))
+                    nome, 
+                    quantidade, // Usa a variável 'quantidade' diretamente
+                    String.format("R$ %.2f", valorMap.get(nome)) // A busca no valorMap ainda é necessária
             });
         }
 
