@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.swing.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 
 public class Ordem implements Serializable {
+    private static final Logger LOGGER = Logger.getLogger(Ordem.class.getName());
     private static final long serialVersionUID = 1L;
     private List<Produto> itens;
     private double total;
@@ -62,7 +64,7 @@ public class Ordem implements Serializable {
 
     // Finaliza o pedido (exibe o total no console)
     public void finalizarPedido() {
-        System.out.println("Pedido finalizado. Total: R$ " + calTotal());
+        LOGGER.info("Pedido finalizado. Total: R$ " + calTotal());
         this.itens.clear();
     }
 
@@ -84,8 +86,12 @@ public class Ordem implements Serializable {
                 precoMap.put(p.getNome(), p.getPreco());
             }
 
-            for (String nome : quantidadeMap.keySet()) {
-                writer.write(String.format("\nProduto: " + nome + "\nPreço Unitário: " + precoMap.get(nome) + "\nUnidades: " + quantidadeMap.get(nome)));
+            for (Map.Entry<String, Integer> entry : quantidadeMap.entrySet()) {
+                String nome = entry.getKey();
+                Integer quantidade = entry.getValue(); // Obtém a quantidade diretamente
+
+                writer.write(String.format("\nProduto: %s\nPreço Unitário: %.2f\nUnidades: %d",
+                         nome, precoMap.get(nome), quantidade));
                 writer.newLine();
             }
 
