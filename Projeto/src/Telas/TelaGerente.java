@@ -1,11 +1,12 @@
-package Telas;
-
-import Paths.Caminhos;
+package telas;
 
 import javax.swing.*;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import paths.Caminhos;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +17,7 @@ import java.io.IOException;
 /** Classe que representa a interface do gerente */
 public class TelaGerente extends JFrame {
     private static TelaGerente instance;
-    private Estoque Estoque;
+    private Estoque estoque;
     private DefaultTableModel tabelaModel;
     private JTable tabelaEstoque;
 
@@ -26,10 +27,10 @@ public class TelaGerente extends JFrame {
 
     /**
      * Construtor da classe TelaGerente
-     * @param Estoque O inventário da cafeteria
+     * @param estoque O inventário da cafeteria
      */
-    public TelaGerente(Estoque Estoque) {
-        this.Estoque = Estoque;
+    public TelaGerente(Estoque estoque) {
+        this.estoque = estoque;
         instance = this;
 
         // Configuração da tela inicial
@@ -56,7 +57,7 @@ public class TelaGerente extends JFrame {
                 int column = tabelaEstoque.columnAtPoint(e.getPoint());
                 if (column == 3) { // Coluna "Atualizar"
                     String nomeProduto = (String) tabelaModel.getValueAt(row, 0);
-                    Produto produto = Estoque.pesquisarProduto(nomeProduto);
+                    Produto produto = estoque.pesquisarProduto(nomeProduto);
                     if (produto != null) {
                         abrirDialogoAtualizacao(produto);
                     }
@@ -143,11 +144,11 @@ public class TelaGerente extends JFrame {
 
                 // Cria um novo objeto Produto com os dados fornecidos
                 Produto produto = new Produto(nome, preco, quantidade);
-                Estoque.addProduto(produto); // Adiciona o produto à Estoque
+                estoque.addProduto(produto); // Adiciona o produto à Estoque
                 JOptionPane.showMessageDialog(dialogoCadastro, "Produto cadastrado com sucesso!");
 
                 try {
-                    Estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
+                    estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -196,7 +197,7 @@ public class TelaGerente extends JFrame {
         JLabel selectLabel = new JLabel("Selecione o Produto:");
         selectLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centraliza horizontalmente
         JComboBox<String> produtoComboBox = new JComboBox<>();
-        for (Produto produto : Estoque.getProdutos().values()) {
+        for (Produto produto : estoque.getProdutos().values()) {
             produtoComboBox.addItem(produto.getNome());
         }
 
@@ -209,11 +210,11 @@ public class TelaGerente extends JFrame {
                 String nomeProduto = (String) produtoComboBox.getSelectedItem();
                 int confirm = JOptionPane.showConfirmDialog(dialogoExclusao, "Tem certeza que deseja excluir o produto " + nomeProduto + "?", "Confirmação de Exclusão", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    Estoque.deletarProduto(nomeProduto);
+                    estoque.deletarProduto(nomeProduto);
                     JOptionPane.showMessageDialog(dialogoExclusao, "Produto excluído com sucesso!");
 
                     try {
-                        Estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
+                        estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -286,11 +287,11 @@ public class TelaGerente extends JFrame {
 
                 // Atualiza o objeto Produto com os novos dados
                 Produto produtoAtualizado = new Produto(produto.getNome(), preco, quantidade);
-                Estoque.addProduto(produtoAtualizado); // Atualiza o produto na Estoque
+                estoque.addProduto(produtoAtualizado); // Atualiza o produto na Estoque
                 JOptionPane.showMessageDialog(dialogoAtualizacao, "Produto atualizado com sucesso!");
 
                 try {
-                    Estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
+                    estoque.salvarInv(Caminhos.INVENTARIO_FILE); // Salva o inventário atualizado
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -330,7 +331,7 @@ public class TelaGerente extends JFrame {
      */
     public void atualizarTabelaEstoque() {
         tabelaModel.setRowCount(0); // Limpa a tabela
-        for (Produto produto : Estoque.getProdutos().values()) {
+        for (Produto produto : estoque.getProdutos().values()) {
             tabelaModel.addRow(new Object[]{produto.getNome(), String.format("%.2f", produto.getPreco()), produto.getQuantidade(), "Atualizar"});
         }
     }

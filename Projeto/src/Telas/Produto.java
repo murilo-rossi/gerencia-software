@@ -1,4 +1,4 @@
-package Telas;
+package telas;
 
 import java.io.Serializable;
 

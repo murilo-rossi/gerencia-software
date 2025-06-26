@@ -1,11 +1,12 @@
-package Telas;
-
-import Paths.Caminhos;
+package telas;
 
 import javax.swing.*;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import paths.Caminhos;
+
 import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class TelaCliente extends JFrame {
     private DefaultTableModel tabelaModel;
     private JLabel totalLabel;
 
-    public TelaCliente(Estoque Estoque) {
+    public TelaCliente(Estoque estoque) {
         ordemAtual = new Ordem();
 
         setTitle("Comprador");
@@ -40,7 +41,7 @@ public class TelaCliente extends JFrame {
                 JOptionPane.showMessageDialog(TelaCliente.this, "Pedido realizado com sucesso! Total: R$ " + String.format("%.2f", total));
                 try {
                     ordemAtual.salvarPedido(Caminhos.PEDIDOS_FILE);
-                    Estoque.salvarInv(Caminhos.INVENTARIO_FILE);
+                    estoque.salvarInv(Caminhos.INVENTARIO_FILE);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -58,7 +59,7 @@ public class TelaCliente extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5); // Definindo um pequeno espaço de 5px ao redor dos componentes
 
         int row = 0;
-        for (Produto produto : Estoque.getProdutos().values()) {
+        for (Produto produto : estoque.getProdutos().values()) {
             gbc.gridx = 0;
             gbc.gridy = row;
             gbc.weightx = 1.0; // Faz com que o label ocupe o espaço disponível

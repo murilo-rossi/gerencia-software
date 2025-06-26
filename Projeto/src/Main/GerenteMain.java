@@ -1,15 +1,17 @@
-package Main;
+package main;
 
-import Telas.Estoque;
-import Paths.Caminhos;
-import Telas.TelaGerente;
+import telas.Estoque;
+import telas.TelaGerente;
 
 import javax.swing.*;
+
+import paths.Caminhos;
+
 import java.awt.*;
 import java.io.IOException;
 
 public class GerenteMain extends Component {
-    private Estoque Estoque;
+    private Estoque estoque;
 
     // Armazena a senha do gerente (em um sistema real, use armazenamento seguro)
     private String senhaGerente = "admin";
@@ -17,9 +19,9 @@ public class GerenteMain extends Component {
     public GerenteMain() {
         // Carrega o inventário
         try {
-            Estoque = Estoque.carregarInventario(Caminhos.INVENTARIO_FILE);
+            estoque = estoque.carregarInventario(Caminhos.INVENTARIO_FILE);
         } catch (IOException e) {
-            Estoque = new Estoque();
+            estoque = new Estoque();
         }
 
         // Define o look and feel Nimbus
@@ -77,7 +79,7 @@ public class GerenteMain extends Component {
     }
 
     private void abrirTelaGerente() {
-        SwingUtilities.invokeLater(() -> new TelaGerente(Estoque));
+        SwingUtilities.invokeLater(() -> new TelaGerente(estoque));
     }
 
     public static void main(String[] args) {

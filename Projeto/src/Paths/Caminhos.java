@@ -1,4 +1,4 @@
-package Paths;
+package paths;
 
 //Caminhos para os arquivos de pedidos e inventários do café
 public class Caminhos {
