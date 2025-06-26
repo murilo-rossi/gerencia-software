@@ -19,7 +19,7 @@ public class GerenteMain extends Component {
     public GerenteMain() {
         // Carrega o inventário
         try {
-            estoque = estoque.carregarInventario(Caminhos.INVENTARIO_FILE);
+            estoque = Estoque.carregarInventario(Caminhos.INVENTARIO_FILE);
         } catch (IOException e) {
             estoque = new Estoque();
         }
@@ -79,7 +79,7 @@ public class GerenteMain extends Component {
     }
 
     private void abrirTelaGerente() {
-        SwingUtilities.invokeLater(() -> new TelaGerente(estoque));
+        SwingUtilities.invokeLater(() -> TelaGerente.getInstance(estoque));
     }
 
     public static void main(String[] args) {

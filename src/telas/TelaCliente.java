@@ -1,7 +1,6 @@
 package telas;
 
 import javax.swing.*;
-import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -86,7 +85,7 @@ public class TelaCliente extends JFrame {
                 int quantidade = 1; // Quantidade padrão ao adicionar um produto
                 ordemAtual.addItem(produto, quantidade);
                 atualizarAreaPedido();
-                TelaGerente telaGerente = TelaGerente.getInstance();
+                TelaGerente telaGerente = TelaGerente.getInstance(estoque);
                 if (telaGerente != null) {
                     telaGerente.atualizarTabelaEstoque();
                 }
@@ -96,7 +95,7 @@ public class TelaCliente extends JFrame {
                 int quantidade = 1; // Quantidade padrão ao remover um produto
                 ordemAtual.removerItem(produto.getNome(), quantidade);
                 atualizarAreaPedido();
-                TelaGerente telaGerente = TelaGerente.getInstance();
+                TelaGerente telaGerente = TelaGerente.getInstance(estoque);
                 if (telaGerente != null) {
                     telaGerente.atualizarTabelaEstoque();
                 }
@@ -137,9 +136,14 @@ public class TelaCliente extends JFrame {
             valorMap.put(p.getNome(), valorMap.getOrDefault(p.getNome(), 0.0) + p.getPreco());
         }
 
-        for (String nome : quantidadeMap.keySet()) {
+        for (Map.Entry<String, Integer> entry : quantidadeMap.entrySet()) {
+            String nome = entry.getKey();
+            Integer quantidade = entry.getValue(); // Valor obtido diretamente, sem nova busca
+
             tabelaModel.addRow(new Object[]{
-                    nome, quantidadeMap.get(nome), String.format("R$ %.2f", valorMap.get(nome))
+                    nome, 
+                    quantidade, // Usa a variável 'quantidade' diretamente
+                    String.format("R$ %.2f", valorMap.get(nome)) // A busca no valorMap ainda é necessária
             });
         }
 

@@ -15,7 +15,7 @@ public class ClienteMain{
     public ClienteMain() {
         // Carrega o inventário
         try {
-            estoque = estoque.carregarInventario(Caminhos.INVENTARIO_FILE);
+            estoque = Estoque.carregarInventario(Caminhos.INVENTARIO_FILE);
         } catch (IOException e) {
             estoque = new Estoque();
         }
